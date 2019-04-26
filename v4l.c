@@ -274,53 +274,8 @@ void print_usage (FILE*stream,int exit_code)
 
 static int verbose =0;
 
-int main (int argc,char*argv []) 
+int v4l_main ()
 { 
-	int next_option; 
-	const char*const short_options ="hd:v:f:s:";
-	const struct option long_options [] ={
-		{"help",0,NULL,'h' }, 
-		{"device",1,NULL,'d' }, 
-		{"framebuffer",1,NULL,'f' }, 
-		{"verbose",1,NULL,'v' }, 
-		{"size",0,NULL,'s' }, 
-		{NULL,0,NULL,0 }}; 
-
-	const char*output_filename =NULL; 
-
-	program_name =argv [0]; 
-	do { 
-		next_option =getopt_long (argc,argv,short_options, long_options,NULL); 
-		switch (next_option) 
-		{ 
-		case 'h':/*-h or --help */ 
-			print_usage (stdout,0); 
-		case 's':/*-s or --size */ 
-			//ip =optarg; 
-			sscanf(optarg, "%d:%d", &(capinfo.width), &(capinfo.height));
-			break; 
-		case 'f':/*-f or --framebuffer */ 
-			fb_dev_name = optarg;
-			break; 
-		case 'd':/*-b or --device */ 
-			strcpy(capinfo.device, optarg);
-			break; 
-		case 'v':/*-v or --verbose */ 
-			sscanf(optarg, "%d", &verbose);
-			ng_debug = verbose;
-			break; 
-		case '?':/*The user specified an invalid option.*/ 
-			print_usage (stderr,1); 
-		case -1:/*Done with options.*/ 
-			break; 
-		default:/*Something else:unexpected.*/ 
-			print_usage (stderr,1); 
-		}
-	}while (next_option !=-1); 
-	/*The main program goes here.*/ 
-
-	printf("video %s caputure: %dx%d\n", capinfo.device, capinfo.width, capinfo.height);
-
 	return capture(); 
 } 
 

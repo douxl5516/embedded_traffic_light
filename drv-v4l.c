@@ -22,7 +22,6 @@
 #include <sys/mman.h>
 
 #include <linux/videodev.h>
-
 #include "grab-ng.h"
 #include "struct-dump.h"
 #include "struct-v4l.h"

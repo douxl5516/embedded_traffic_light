@@ -184,46 +184,26 @@ int Card_Beep(uchar delay){
         tty_write(txbuff,3);
         usleep(100);
 }
-static int cmd_state;
-static void* cmd(void){
-	while(1){
-		getchar();
-		cmd_state = 1;
-	}
-}
+
 
 int card_ctrl_main(void){
 	int i =0;
-	pthread_t th_cmd;
+
 	uchar block = 0x1;
 	uchar addr = 0x0;
 	uchar key[6] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
 	uchar data[16] = {0xFF,0xEE,0xDD,0xCC,0xBB,0xAA,0x99,0x88,0x77,0x66,0x55,0x44,0x33,0x22,0x11,0x00};
 	uchar card_NO[4] = {0x00,0x00,0x00,0x00};
 	tty_init();
-        /* Create the threads */
-        pthread_create(&th_cmd, NULL, cmd, 0);
-	Card_Beep(1);
-	sleep(1);
+    Card_Beep(1);
 	while(1){
-		printf("Press any key to contiue...\n");
-	 	while(1){
-			if((Card_Request() < 0))
-				continue;
-			if(cmd_state == 1){
-				cmd_state = 0;
-				break;
-			}
-		};
+        while(1){
+            sleep(1);
+            if((Card_Request() < 0))
+                continue;
+        };
 	 	if(Card_Anticoll(card_NO) < 0)
 			continue;
-		printf("CARD NO:\t");
-		for(i = 0;i < 4;i ++){
-			printf("%02X ",card_NO[i]);
-		}
-		printf("\n");
-		printf("BLOCK NO:\t%d\n",block);
-#if 1
 		if(Card_Select() < 0)
 			continue;
 		if(Card_Load_Key_EE(addr,key) < 0)
@@ -232,41 +212,9 @@ int card_ctrl_main(void){
 			continue;
 		if(Card_Read(block,data) < 0)
 			continue;	
-		printf("INDEX DATA:\t",block);
-		for(i = 0;i < 16;i ++){
-			printf("%2X|",i);
-		}
-		printf("\n");
-		printf("\t\t",block);
-		for(i = 0;i < 16;i ++){
-			printf("---",i);
-		}
-		printf("\n");
-		printf("Block%d data:\t",block);
-		for(i = 0;i < 16;i ++){
-			printf("%02x ",data[i]);
-		}
-		printf("\n");
-		printf("Write data:\t");
-		for(i = 0 ;i < 16;i ++){
-			data[i] = ~data[i];
-			printf("%02x ",data[i]);	
-		}
-		printf("\n");
-#if 1
-		if(Card_Write(block,data) < 0)
-                        continue;
-
-		if(Card_Read(block,data) < 0)
-			continue;	
-                printf("Block%d data:\t",block);
-                for(i = 0;i < 16;i ++){
-                        printf("%02x ",data[i]);
-                }
-                printf("\n");
-#endif	
-#endif
+        return 1;
 	}	
+    return 0;
 }
 
 
