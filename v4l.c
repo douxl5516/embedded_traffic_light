@@ -279,3 +279,65 @@ int v4l_main ()
 	return capture(); 
 } 
 
+int init_frame(){
+    void* caphandle;
+    struct ng_vid_driver *cap_driver = &v4l_driver;
+    struct ng_video_fmt fmt;
+    if(fbdev.fb_bpp==24)
+        fmt.fmtid = VIDEO_BGR24;
+    else
+        fmt.fmtid = VIDEO_RGB16_LE;
+    fmt.width = capinfo.width;
+    fmt.height = capinfo.height;
+    if(framebuffer_open()<0){
+        return -1;
+    }
+    caphandle=cap_driver->open(capinfo.device);
+    if(!caphandle){
+        printf("failed to open video for linux interface!\n");
+        return -1;
+    }
+    if(cap_driver->setformat(caphandle, &fmt)){
+        printf("failed to set video format!\n");
+        return -1;
+    }
+    cap_driver->startvideo(caphandle, 25,  NUM_CAPBUFFER);
+    {
+        struct ng_video_buf* pvideo_buf;
+        int x, y, width, height;
+        int diff_width, diff_height;
+        diff_width = fbdev.fb_width - fmt.width;
+        diff_height = fbdev.fb_height - fmt.height;
+        if(diff_width>0){
+            x =  diff_width/2;
+            width = fmt.width;
+        }
+        else{
+            x = 0;
+            width = fbdev.fb_width;
+        }
+        if(diff_height>0){
+            y =  diff_height/2;
+            height = fmt.height;
+        }
+        else{
+            y = 0;
+            height = fbdev.fb_height;
+        }
+        //begin capture
+        for(;;){
+            pvideo_buf=cap_driver->nextframe(caphandle);
+            fbdev.fb_draw(&fbdev, pvideo_buf->data, x, y, width, height);
+            ng_release_video_buf(pvideo_buf);
+        }
+    }
+    return 0;
+}
+int next_frame(){
+
+}
+int terminate_frame(){
+    framebuffer_close();
+    cap_driver->stopvideo(caphandle);
+    cap_driver->close(caphandle);
+}

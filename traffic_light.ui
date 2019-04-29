@@ -42,7 +42,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>switch light</string>
+    <string>to manual mode</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -56,6 +56,22 @@
    </property>
    <property name="text">
     <string>Please use the IC card to unlock</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_3">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>340</y>
+     <width>181</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>switch light mode</string>
    </property>
   </widget>
  </widget>
