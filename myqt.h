@@ -6,6 +6,11 @@
 #include <ui_traffic_light.h>
 #include "frame_handler.h"
 
+/*
+  direction：方向，0为东西方向，1为南北方向
+  time：计时器的数字
+  color：1为绿灯，0为黄灯
+*/
 struct light_status{
     int time;
     int dir;
