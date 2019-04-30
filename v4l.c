@@ -19,10 +19,10 @@
 #include <sys/stat.h>
 #include <sys/mman.h>
 
+#include  "v4l.h"
 #include "fb.h"
 #include <linux/videodev.h>
 
-#include "grab-ng.h"
 
 #define _GNU_SOURCE
 #include <getopt.h>
@@ -279,7 +279,7 @@ int v4l_main ()
 	return capture(); 
 } 
 
-struct frame_handler init_frame(){
+frame_handler init_video(){
     void* caphandle;
     struct ng_vid_driver *cap_driver = &v4l_driver;
     struct ng_video_fmt fmt;
@@ -301,15 +301,16 @@ struct frame_handler init_frame(){
         printf("failed to set video format!\n");
         exit(1);
     }
-    cap_driver->startvideo(caphandle, 25,  NUM_CAPBUFFER);w
+    cap_driver->startvideo(caphandle, 25,  NUM_CAPBUFFER);
     
 
-    struct frame_handler handler;
+    frame_handler handler;
 	handler.caphandle=caphandle;
 	handler.cap_driver=cap_driver;
+    handler.fmt=fmt;
 	return handler;
 }
-int next_frame(struct frame_handler handler){
+int nxt_frame(frame_handler handler){
 	
 	void* caphandle=handler.caphandle;
 	struct ng_vid_driver *cap_driver=handler.cap_driver;
@@ -342,7 +343,7 @@ int next_frame(struct frame_handler handler){
         
     
 }
-int terminate_frame(struct frame_handler handler){
+int close_video(frame_handler handler){
     void* caphandle=handler.caphandle;
     struct ng_vid_driver *cap_driver=handler.cap_driver;
     framebuffer_close();

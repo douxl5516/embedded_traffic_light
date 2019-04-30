@@ -4,6 +4,7 @@
 #include "led.h"
 #include "tty.h"
 #include "card_ctrl.h"
+#include "v4l.h"
 
 MyDlg::MyDlg()
 {

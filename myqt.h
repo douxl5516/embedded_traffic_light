@@ -4,13 +4,14 @@
 #include <QDialog>
 #include <QTimer>
 #include <ui_traffic_light.h>
-#include "v4l.h"
+#include "frame_handler.h"
 
 struct light_status{
     int time;
     int dir;
     int color;
 };
+
 
 class MyDlg : public QDialog
 {

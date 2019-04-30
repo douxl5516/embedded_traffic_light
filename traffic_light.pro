@@ -17,7 +17,8 @@ HEADERS += myqt.h \
     grab-ng.h \
     struct-dump.h \
     struct-v4l.h \
-    v4l.h
+    v4l.h \
+    frame_handler.h
 FORMS += traffic_light.ui
 SOURCES += main.cpp myqt.cpp \
     led.c \
