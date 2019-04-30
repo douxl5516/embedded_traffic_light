@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QTimer>
 #include <ui_traffic_light.h>
+#include "v4l.h"
 
 struct light_status{
     int time;
@@ -29,7 +30,10 @@ public slots:
 private:
     Ui::Form ui;
     QTimer *timer;
-    bool isAutoMode=true;
+    QTimer *timer_v4l;
+    bool isAutoMode;
+    bool isCameraOpen;
     light_status status;
+    struct frame_handler handler;
 };
 #endif

@@ -4,16 +4,18 @@
 #include "led.h"
 #include "tty.h"
 #include "card_ctrl.h"
-#include "v4l.h"
-
 
 MyDlg::MyDlg()
 {
 	ui.setupUi(this);
+    isAutoMode=true;
+    isCameraOpen=false;
     timer = new QTimer(this);
+    timer_v4l=new QTimer(this);
     QObject::connect(ui.pushButton, SIGNAL(clicked()), this, SLOT(open_camera()));
     QObject::connect(ui.pushButton_2, SIGNAL(clicked()), this, SLOT(switch_light()));
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(update_led()));
+    QObject::connect(timer_v4l, SIGNAL(timeout()), this, SLOT(update_v4l()));
     if(card_ctrl_main()){
         ui.pushButton->setEnabled(true);
         ui.pushButton_2->setEnabled(true);
@@ -24,6 +26,7 @@ MyDlg::MyDlg()
 
 MyDlg::~MyDlg(){
     delete timer;
+    delete timer_v4l;
 }
 
 void MyDlg::init_light_status(){
@@ -33,7 +36,14 @@ void MyDlg::init_light_status(){
 }
 
 void MyDlg::open_camera(){
-    v4l_main();
+    if(isCameraOpen){
+        close_video(handler);
+        timer_v4l->stop();
+    }else{
+        handler=init_video();
+        timer_v4l->start(100);
+    }
+
 }
 
 void MyDlg::switch_mode(){
@@ -75,6 +85,6 @@ void MyDlg::update_led(){
 }
 
 void MyDlg::update_v4l(){
-
+    nxt_frame(handler);
 }
 
