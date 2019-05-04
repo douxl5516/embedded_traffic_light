@@ -17,19 +17,11 @@ MyDlg::MyDlg()
     QObject::connect(ui.pushButton, SIGNAL(clicked()), this, SLOT(open_camera()));
     QObject::connect(ui.pushButton_2, SIGNAL(clicked()), this, SLOT(switch_mode()));
     QObject::connect(ui.pushButton_3, SIGNAL(clicked()), this, SLOT(switch_light()));
+    QObject::connect(ui.pushButton_unlock,SIGNAL(clicked()),this,SLOT(get_priority()));
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(update_led()));
     QObject::connect(timer_v4l, SIGNAL(timeout()), this, SLOT(update_v4l()));
 
-    if(card_ctrl_main()){
-        ui.pushButton->setEnabled(true);
-        ui.pushButton_2->setEnabled(true);
-        init_light_status();
-        ui.label->setText(QString("Welcome"));
-        ui.label_dir->setText(QString(status.dir==0?"WE":"NS"));
-        ui.label_time->setNum(status.time);
-        ui.label_color->setText(QString(status.color==0?"yellow":"green"));
-        ui.label_auto->setText(QString(isAutoMode?"yes":"no"));
-    }
+    init_light_status();
     timer->start(1000);
 }
 
@@ -38,10 +30,22 @@ MyDlg::~MyDlg(){
     delete timer_v4l;
 }
 
+void MyDlg::get_priority(){
+    if(card_ctrl_main()){
+        ui.pushButton->setEnabled(true);
+        ui.pushButton_2->setEnabled(true);
+        ui.label->setText(QString("Welcome"));
+    }
+}
+
 void MyDlg::init_light_status(){
     status.time=10;
     status.dir=0;
     status.color=0;
+    ui.label_dir->setText(QString(status.dir==0?"WE":"NS"));
+    ui.label_time->setNum(status.time);
+    ui.label_color->setText(QString(status.color==0?"yellow":"green"));
+    ui.label_auto->setText(QString(isAutoMode?"yes":"no"));
 }
 
 void MyDlg::open_camera(){
@@ -50,9 +54,8 @@ void MyDlg::open_camera(){
         timer_v4l->stop();
     }else{
         handler=init_video();
-        timer_v4l->start(100);
+        timer_v4l->start(50);
     }
-
 }
 
 void MyDlg::switch_mode(){
