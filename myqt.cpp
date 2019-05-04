@@ -35,6 +35,7 @@ void MyDlg::get_priority(){
         ui.pushButton->setEnabled(true);
         ui.pushButton_2->setEnabled(true);
         ui.label->setText(QString("Welcome"));
+        ui.pushButton_unlock->setEnabled(false);
     }
 }
 
@@ -50,8 +51,8 @@ void MyDlg::init_light_status(){
 
 void MyDlg::open_camera(){
     if(isCameraOpen){
-        close_video(handler);
         timer_v4l->stop();
+        close_video(handler);
     }else{
         handler=init_video();
         timer_v4l->start(50);

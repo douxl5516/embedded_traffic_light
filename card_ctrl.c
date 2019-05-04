@@ -187,39 +187,17 @@ int Card_Beep(uchar delay){
 
 
 int card_ctrl_main(void){
-	int i =0;
-
-	uchar block = 0x1;
-	uchar addr = 0x0;
-	uchar key[6] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
-	uchar data[16] = {0xFF,0xEE,0xDD,0xCC,0xBB,0xAA,0x99,0x88,0x77,0x66,0x55,0x44,0x33,0x22,0x11,0x00};
 	uchar card_NO[4] = {0x00,0x00,0x00,0x00};
 	tty_init();
     Card_Beep(1);
 	while(1){
         while(1){
             sleep(1);
-            if((Card_Request() < 0))
-                continue;
-        };
+            if((Card_Request() > 0))
+                break;
+        }
 	 	if(Card_Anticoll(card_NO) < 0)
 			continue;
-		if(Card_Select() < 0)
-			continue;
-		if(Card_Load_Key_EE(addr,key) < 0)
-			continue;
-		if(Card_Auth_EE(addr,block) < 0)
-			continue;
-		if(Card_Read(block,data) < 0)
-			continue;	
         return 1;
 	}	
-    return 0;
 }
-
-
-
-
-
-
-
