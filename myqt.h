@@ -32,6 +32,7 @@ public slots:
     void switch_light();
     void update_led();
     void update_v4l();
+    void get_priority();
 
 private:
     Ui::Form ui;
