@@ -192,7 +192,6 @@ int card_ctrl_main(void){
     Card_Beep(1);
 	while(1){
         while(1){
-            sleep(1);
             if((Card_Request() > 0))
                 break;
         }

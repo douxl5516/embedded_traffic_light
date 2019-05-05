@@ -42,7 +42,7 @@ void MyDlg::get_priority(){
 void MyDlg::init_light_status(){
     status.time=10;
     status.dir=0;
-    status.color=0;
+    status.color=1;
     ui.label_dir->setText(QString(status.dir==0?"WE":"NS"));
     ui.label_time->setNum(status.time);
     ui.label_color->setText(QString(status.color==0?"yellow":"green"));
@@ -53,9 +53,11 @@ void MyDlg::open_camera(){
     if(isCameraOpen){
         timer_v4l->stop();
         close_video(handler);
+		isCameraOpen=false;
     }else{
         handler=init_video();
         timer_v4l->start(50);
+		isCameraOpen=true;
     }
 }
 
